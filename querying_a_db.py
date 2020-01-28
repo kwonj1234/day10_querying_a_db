@@ -61,14 +61,23 @@ with sqlite3.connect("sitemetrics.db") as connection:
     searchterm_visitors = c.fetchall() #sweet, or, left, word, female, ball
 
 ##### What was the most frequently used search term by people from Idaho?
+    c.execute("""SELECT search_terms.word, COUNT(user_searches.term_id) AS cnt
+        FROM search_terms 
+        JOIN user_searches ON search_terms.id = user_searches.term_id 
+        JOIN users ON users.id = user_searches.user_id 
+        WHERE users.state LIKE "%ID%"
+        GROUP BY search_terms.word ORDER BY cnt DESC LIMIT 1""")
+    idaho_words = c.fetchall()
 
 ##### What is the name of user 391, and what are his search terms?
-    c.execute("""SELECT name FROM users WHERE id = 391""")
+    user391 = [391]
+    c.execute("""SELECT name FROM users WHERE id = ?;""" , user391)
     name391 = c.fetchall() #Stan Alston
     c.execute("""SELECT search_terms.word FROM search_terms 
         JOIN user_searches ON search_terms.id = user_searches.term_id 
         JOIN users ON users.id = user_searches.user_id 
-        WHERE user_id = 391""")
+        WHERE user_id = ?;""" , user391)
     searchterms391 = c.fetchall() #ornament, heat, sex, secret, dry
+    print(name391, searchterms391)
 
 
