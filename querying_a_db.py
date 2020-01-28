@@ -78,6 +78,3 @@ with sqlite3.connect("sitemetrics.db") as connection:
         JOIN users ON users.id = user_searches.user_id 
         WHERE user_id = ?;""" , user391)
     searchterms391 = c.fetchall() #ornament, heat, sex, secret, dry
-    print(name391, searchterms391)
-
-
